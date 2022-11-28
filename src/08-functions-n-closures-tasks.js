@@ -99,8 +99,20 @@ function memoize(func) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(input, attempts) {
+  let attLimit = attempts;
+  function manage() {
+    try {
+      attLimit -= 1;
+      return input();
+    } catch (err) {
+      if (attLimit > 0) {
+        return manage();
+      }
+      return err;
+    }
+  }
+  return manage;
 }
 
 /**
